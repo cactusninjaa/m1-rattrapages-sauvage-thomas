@@ -1,5 +1,5 @@
 import { View, Text, Button } from 'react-native';
-import { useGetRecommendationBook } from '../hooks/useGetRecommendationBook';
+import { useGetRecommendationBook } from '@/hooks/useGetRecommendationBook';
 
 export default function Index() {
   const queryRecommendationBook = useGetRecommendationBook()
