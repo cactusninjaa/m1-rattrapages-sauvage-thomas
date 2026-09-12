@@ -1,8 +1,8 @@
 export type StoredBook = {
     title: string;
-    /** Clé d'œuvre OpenLibrary sans son préfixe, ex. "OL66554W". */
+    /** OpenLibrary work key without its prefix, e.g. "OL66554W". */
     openLibraryId: string;
-    /** Date ISO : tout passe par du JSON (AsyncStorage, persister react-query). */
+    /** ISO date: everything round-trips through JSON (AsyncStorage, react-query persister). */
     storedDate: string;
     author: string[];
     coverImage: string;
@@ -12,7 +12,7 @@ export type StoredBook = {
 export type Review = {
     id: string;
     book: StoredBook;
-    /** 1 à 5 étoiles. */
+    /** 1 to 5 stars. */
     rating: number;
     comment: string;
     createdAt: string;

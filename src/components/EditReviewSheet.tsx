@@ -16,7 +16,7 @@ import { colors, fonts } from '@/constants/theme';
 import { Review } from '@/types/library';
 
 type EditReviewSheetProps = {
-    /** L'avis en cours d'édition, `null` quand la feuille est fermée. */
+    /** The review being edited, `null` when the sheet is closed. */
     review: Review | null;
     onClose: () => void;
     onSave: (rating: number, comment: string) => void;
@@ -47,8 +47,8 @@ export default function EditReviewSheet({
                         </Pressable>
                     </View>
 
-                    {/* La clé remonte le formulaire à chaque avis ouvert : ses
-                        champs repartent des bonnes valeurs sans passer par un effet. */}
+                    {/* The key remounts the form for each opened review, so its
+                        fields start from the right values without an effect. */}
                     {review ? (
                         <EditReviewForm
                             key={review.id}

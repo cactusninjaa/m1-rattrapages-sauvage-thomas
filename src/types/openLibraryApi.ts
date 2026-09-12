@@ -1,9 +1,9 @@
 export interface OpenLibraryDoc {
-    /** Clé d'œuvre, de la forme "/works/OL66554W". */
+    /** Work key, shaped like "/works/OL66554W". */
     key: string;
     title: string;
     author_name?: string[];
-    /** Identifiant de couverture, absent pour beaucoup d'ouvrages. */
+    /** Cover id, missing on many works. */
     cover_i?: number;
     first_publish_year?: number;
 }

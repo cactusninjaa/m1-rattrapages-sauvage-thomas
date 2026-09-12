@@ -6,7 +6,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        // Chaque écran porte son propre titre, pas de header natif.
+        // Each screen renders its own title, so no native header.
         headerShown: false,
         tabBarActiveTintColor: colors.accent,
         tabBarInactiveTintColor: 'rgba(243,237,227,.38)',

@@ -3,7 +3,7 @@ import { colors, fonts } from '@/constants/theme';
 
 type SectionLabelProps = {
     children: string;
-    /** Ambre pour les sections mises en avant, gris sinon. */
+    /** Amber for highlighted sections, grey otherwise. */
     highlighted?: boolean;
     style?: StyleProp<TextStyle>;
 };

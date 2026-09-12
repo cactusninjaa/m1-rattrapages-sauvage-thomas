@@ -6,15 +6,15 @@ export const BASE_URL_API = 'https://openlibrary.org';
 const COVERS_URL = 'https://covers.openlibrary.org/b/id';
 
 /**
- * OpenLibrary ne demande pas de clé, mais triple le quota (1 → 3 req/s) pour
- * les clients qui s'identifient.
+ * OpenLibrary needs no API key, but triples the quota (1 -> 3 req/s) for
+ * clients that identify themselves.
  */
 const openLibraryHeaders = () => ({
     Accept: 'application/json',
-    'User-Agent': 'bookshelf-expo-app/1.0 (projet etudiant)',
+    'User-Agent': 'bookshelf-expo-app/1.0 (student project)',
 });
 
-/** La réponse par défaut embarque des dizaines de champs inutiles ici. */
+/** The default response carries dozens of fields we do not need here. */
 export const SEARCH_FIELDS = 'key,title,author_name,cover_i,first_publish_year';
 
 export const fetchOpenLibrary = async (path: string): Promise<OpenLibrarySearchResponse> => {

@@ -50,7 +50,7 @@ export default function AddReview() {
         setQuery('');
     };
 
-    /** L'ISBN scanné alimente la barre de recherche, qui bascule seule en mode ISBN. */
+    /** The scanned ISBN feeds the search bar, which switches to ISBN mode on its own. */
     const handleScanned = (isbn: string) => {
         setScannerVisible(false);
         setSelectedBook(null);

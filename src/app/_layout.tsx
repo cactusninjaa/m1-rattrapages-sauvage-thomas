@@ -21,8 +21,8 @@ const asyncStoragePersister = createAsyncStoragePersister({
 
 export default function RootLayout() {
   return (
-    // Requis par react-native-gesture-handler, dont dépendent les lignes
-    // d'avis glissables.
+    // Required by react-native-gesture-handler, which the swipeable review
+    // rows depend on.
     <GestureHandlerRootView style={{ flex: 1 }}>
       <PersistQueryClientProvider
         client={queryClient}

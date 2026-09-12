@@ -27,7 +27,7 @@ import { StoredBook } from '@/types/library';
 const COLUMNS = 3;
 const GRID_GAP = 10;
 
-/** Sentinelle pour la tuile « Ajouter » en dernière cellule de la grille. */
+/** Sentinel for the "Add" tile sitting in the grid's last cell. */
 const ADD_TILE = 'add-tile' as const;
 type GridItem = StoredBook | typeof ADD_TILE;
 

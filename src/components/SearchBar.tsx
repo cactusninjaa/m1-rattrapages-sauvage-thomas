@@ -7,7 +7,7 @@ type SearchBarProps = {
     value: string;
     onChangeText: (value: string) => void;
     placeholder?: string;
-    /** Affiche le bouton de scan de code-barres quand il est fourni. */
+    /** Shows the barcode scan button when provided. */
     onScanPress?: () => void;
 };
 

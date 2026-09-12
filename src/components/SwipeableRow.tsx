@@ -16,7 +16,7 @@ export type SwipeAction = {
 
 type SwipeableRowProps = {
     children: ReactNode;
-    /** Révélées par un glissement vers la gauche. */
+    /** Revealed by swiping left. */
     actions: SwipeAction[];
 };
 
@@ -33,8 +33,8 @@ export default function SwipeableRow({ children, actions }: SwipeableRowProps) {
                 <Pressable
                     key={action.label}
                     onPress={() => {
-                        // On referme d'abord : sinon la ligne reste ouverte
-                        // derrière l'alerte ou la feuille d'édition.
+                        // Close first, otherwise the row stays open behind the
+                        // alert or the edit sheet.
                         swipeable.close();
                         action.onPress();
                     }}

@@ -28,8 +28,8 @@ export default function Reviews() {
     const deleteReview = useDeleteReview();
     const updateReview = useUpdateReview();
 
-    // On garde l'id plutôt que l'objet : la feuille reste synchrone avec le
-    // cache si l'avis change pendant l'édition.
+    // Keep the id rather than the object: the sheet stays in sync with the
+    // cache if the review changes while being edited.
     const editedReview = reviews.find((review) => review.id === editedId) ?? null;
 
     const { average, countByRating } = useMemo(() => {
@@ -294,13 +294,13 @@ const styles = StyleSheet.create({
     reviewRow: {
         flexDirection: 'row',
         gap: 13,
-        // Padding plutôt que marge : la ligne occupe toute la largeur pour que
-        // les actions glissées atteignent le bord de l'écran.
+        // Padding rather than margin: the row spans the full width so the
+        // revealed actions reach the screen edge.
         paddingHorizontal: spacing.screen,
         paddingVertical: 15,
         borderTopWidth: 1,
         borderTopColor: 'rgba(243,237,227,.09)',
-        // Opaque, sinon les actions transparaissent sous la ligne pendant le glissement.
+        // Opaque, otherwise the actions show through the row while swiping.
         backgroundColor: colors.background,
     },
     reviewBody: {

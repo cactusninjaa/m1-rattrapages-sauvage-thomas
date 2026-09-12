@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 /**
- * Suffixe de version : le passage de Gutenberg à OpenLibrary a changé la forme
- * de StoredBook (id numérique → clé d'œuvre). Les anciennes entrées sont
- * ignorées plutôt que lues avec un identifiant devenu invalide.
+ * Version suffix: moving from Gutenberg to OpenLibrary changed the shape of
+ * StoredBook (numeric id -> work key). Stale entries are ignored rather than
+ * read with an id that is no longer valid.
  */
 export const STORAGE_KEYS = {
     READ_LIST: 'readList.v2',
@@ -16,7 +16,7 @@ export const readJson = async <T>(key: string, fallback: T): Promise<T> => {
     try {
         return JSON.parse(raw) as T;
     } catch {
-        // Donnée corrompue : on repart du fallback plutôt que de faire planter l'écran.
+        // Corrupted data: fall back instead of crashing the screen.
         return fallback;
     }
 };

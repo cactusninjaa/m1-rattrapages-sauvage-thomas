@@ -7,7 +7,7 @@ import { StoredBook } from '@/types/library';
 type BookRowProps = {
     book: StoredBook;
     onPress?: () => void;
-    /** Bouton ou icône affiché à droite. */
+    /** Button or icon rendered on the right. */
     action?: ReactNode;
 };
 

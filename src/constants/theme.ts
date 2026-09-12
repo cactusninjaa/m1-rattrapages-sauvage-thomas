@@ -22,8 +22,8 @@ export const spacing = {
 };
 
 export const fonts = {
-    // Pas de police custom : on s'appuie sur les familles système les plus
-    // proches d'Instrument Serif / IBM Plex Mono du design.
+    // No custom font: we fall back to the system families closest to the
+    // design's Instrument Serif / IBM Plex Mono.
     display: Platform.select({ ios: 'Georgia', default: 'serif' }),
     mono: Platform.select({ ios: 'Menlo', default: 'monospace' }),
 };
@@ -39,7 +39,7 @@ const COVER_COLORS = [
     '#3C3A47',
 ];
 
-/** Couleur de couverture typographique, stable pour un même livre. */
+/** Typographic cover colour, stable for a given book. */
 export const pickCoverColor = (openLibraryId: string) => {
     let hash = 0;
     for (let index = 0; index < openLibraryId.length; index++) {

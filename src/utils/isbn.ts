@@ -1,4 +1,4 @@
-/** Retire tirets, espaces et points, et met le X final en majuscule. */
+/** Strips dashes, spaces and dots, and upper-cases a trailing X. */
 const clean = (input: string) => input.replace(/[\s\-.]/g, '').toUpperCase();
 
 const isValidIsbn10 = (isbn: string) => {
@@ -20,9 +20,9 @@ const isValidIsbn13 = (isbn: string) => {
 };
 
 /**
- * Renvoie l'ISBN normalisé si la saisie en est un, `null` sinon.
- * La clé de contrôle est vérifiée : une suite de 13 chiffres quelconque
- * ne part pas en requête réseau.
+ * Returns the normalised ISBN when the input is one, `null` otherwise.
+ * The check digit is validated, so an arbitrary 13-digit string never
+ * triggers a network request.
  */
 export const normalizeIsbn = (input: string): string | null => {
     const candidate = clean(input);

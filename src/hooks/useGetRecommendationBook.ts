@@ -5,11 +5,11 @@ import { StoredBook } from "@/types/library";
 
 const ONE_DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000
 
-/** Vivier de tirage : large, mais borné pour rester dans des offsets valides. */
+/** Draw pool: wide, but bounded to stay within valid offsets. */
 const RECOMMENDATION_QUERY = 'subject:fiction'
 const POOL_SIZE = 10_000
 
-/** Clé du jour en heure locale : le tirage change au passage de minuit. */
+/** Local day key: the draw changes at midnight. */
 const todayKey = () => format(new Date(), 'yyyy-MM-dd')
 
 const getRecommendationBook = async (): Promise<StoredBook> => {
@@ -31,9 +31,9 @@ export const useGetRecommendationBook = () => {
     return useQuery({
         queryKey: ["recommendation-book", todayKey()],
         queryFn: getRecommendationBook,
-        // La clé porte la date, donc le livre est stable toute la journée et
-        // un nouveau tirage a lieu au premier lancement du lendemain.
-        // Seul le bouton « Changer le livre » force un refetch dans la journée.
+        // The key carries the date, so the book stays stable all day and a new
+        // draw happens on the next day's first launch. Only the "change book"
+        // button forces a refetch within the day.
         staleTime: Infinity,
         gcTime: ONE_DAY_IN_MILLISECONDS,
         retry: false,

@@ -10,7 +10,7 @@ export const useReadList = () => {
     return useQuery({
         queryKey: READ_LIST_QUERY_KEY,
         queryFn: getReadList,
-        // La source de vérité est AsyncStorage, pas le réseau.
+        // AsyncStorage is the source of truth, not the network.
         staleTime: Infinity,
     });
 };

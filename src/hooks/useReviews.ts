@@ -16,7 +16,7 @@ export const useReviews = () => {
     return useQuery({
         queryKey: REVIEWS_QUERY_KEY,
         queryFn: getReviews,
-        // La source de vérité est AsyncStorage, pas le réseau.
+        // AsyncStorage is the source of truth, not the network.
         staleTime: Infinity,
     });
 };
@@ -47,7 +47,7 @@ export type ReviewEdit = {
     comment: string;
 };
 
-/** Seuls la note et le commentaire sont modifiables, le livre reste celui noté. */
+/** Only rating and comment are editable, the reviewed book never changes. */
 export const useUpdateReview = () => {
     const queryClient = useQueryClient();
 

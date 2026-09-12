@@ -11,7 +11,7 @@ type BarcodeScannerSheetProps = {
     onScanned: (isbn: string) => void;
 };
 
-/** Les codes-barres au dos des livres sont des EAN-13 (ISBN-13). */
+/** Barcodes on the back of books are EAN-13 (ISBN-13). */
 const BARCODE_TYPES = ['ean13', 'ean8', 'upc_a', 'upc_e'] as const;
 
 export default function BarcodeScannerSheet({
@@ -33,8 +33,8 @@ export default function BarcodeScannerSheet({
                     </Pressable>
                 </View>
 
-                {/* Monté uniquement à l'ouverture : l'état du scan repart
-                    naturellement à zéro, et la caméra est libérée à la fermeture. */}
+                {/* Mounted only while open: scan state naturally starts fresh
+                    and the camera is released on close. */}
                 {visible ? <Scanner onScanned={onScanned} /> : <View style={styles.viewfinder} />}
             </View>
         </Modal>
@@ -43,11 +43,11 @@ export default function BarcodeScannerSheet({
 
 function Scanner({ onScanned }: { onScanned: (isbn: string) => void }) {
     const [permission, requestPermission] = useCameraPermissions();
-    // La caméra émet en rafale : on ne traite qu'un code par ouverture.
+    // The camera fires continuously: only handle one code per opening.
     const [handled, setHandled] = useState(false);
     const [rejected, setRejected] = useState<string | null>(null);
 
-    // Demander l'accès est bien une synchronisation avec un système externe.
+    // Requesting access is a genuine sync with an external system.
     useEffect(() => {
         if (permission && !permission.granted && permission.canAskAgain) {
             requestPermission();

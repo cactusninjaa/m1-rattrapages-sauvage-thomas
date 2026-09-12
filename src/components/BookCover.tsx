@@ -8,11 +8,11 @@ type BookCoverProps = {
     book: StoredBook;
     width: DimensionValue;
     height?: DimensionValue;
-    /** Taille du titre de la couverture typographique de repli. */
+    /** Title size on the typographic fallback cover. */
     titleSize?: number;
 };
 
-/** Nom de famille seul, l'API renvoie « Austen, Jane ». */
+/** Last name only, the API returns "Austen, Jane". */
 const lastName = (author?: string) => (author ?? '').split(',')[0].trim();
 
 export default function BookCover({ book, width, height, titleSize = 12 }: BookCoverProps) {

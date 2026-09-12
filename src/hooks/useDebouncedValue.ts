@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-/** Évite de lancer une requête à chaque frappe. */
+/** Avoids firing a request on every keystroke. */
 export const useDebouncedValue = <T>(value: T, delay = 350): T => {
     const [debounced, setDebounced] = useState(value);
 

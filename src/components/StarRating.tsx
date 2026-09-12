@@ -5,7 +5,7 @@ import { colors } from '@/constants/theme';
 type StarRatingProps = {
     value: number;
     size?: number;
-    /** Absent = lecture seule. */
+    /** Absent means read-only. */
     onChange?: (rating: number) => void;
 };
 

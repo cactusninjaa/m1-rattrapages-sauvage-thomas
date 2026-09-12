@@ -10,13 +10,13 @@ const RESULTS_PER_SEARCH = 25;
 
 export type SearchResult = {
     books: StoredBook[];
-    /** ISBN normalisé quand la saisie en était un. */
+    /** Normalised ISBN when the input was one. */
     isbn?: string;
 };
 
 const searchBooks = async (query: string): Promise<SearchResult> => {
     const isbn = normalizeIsbn(query);
-    // OpenLibrary indexe les ISBN nativement : pas de résolution intermédiaire.
+    // OpenLibrary indexes ISBNs natively: no intermediate resolution step.
     const filter = isbn ? `isbn=${isbn}` : `q=${encodeURIComponent(query)}`;
 
     const data = await fetchOpenLibrary(
