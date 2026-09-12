@@ -29,7 +29,7 @@ export const useAddReview = () => {
             const reviews = await getReviews();
             const createdAt = new Date().toISOString();
             const review: Review = {
-                id: `${book.gutembergId}-${Date.now()}`,
+                id: `${book.openLibraryId}-${Date.now()}`,
                 book,
                 rating,
                 comment: comment.trim(),

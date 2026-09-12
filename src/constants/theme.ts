@@ -40,5 +40,10 @@ const COVER_COLORS = [
 ];
 
 /** Couleur de couverture typographique, stable pour un même livre. */
-export const pickCoverColor = (gutembergId: number) =>
-    COVER_COLORS[Math.abs(gutembergId) % COVER_COLORS.length];
+export const pickCoverColor = (openLibraryId: string) => {
+    let hash = 0;
+    for (let index = 0; index < openLibraryId.length; index++) {
+        hash = (hash * 31 + openLibraryId.charCodeAt(index)) | 0;
+    }
+    return COVER_COLORS[Math.abs(hash) % COVER_COLORS.length];
+};

@@ -32,7 +32,7 @@ export default function BookCover({ book, width, height, titleSize = 12 }: BookC
     }
 
     return (
-        <View style={[styles.cover, styles.fallback, frame, { backgroundColor: pickCoverColor(book.gutembergId) }]}>
+        <View style={[styles.cover, styles.fallback, frame, { backgroundColor: pickCoverColor(book.openLibraryId) }]}>
             <Text numberOfLines={4} style={[styles.fallbackTitle, { fontSize: titleSize }]}>
                 {book.title}
             </Text>

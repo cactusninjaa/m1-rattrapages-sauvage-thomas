@@ -21,7 +21,7 @@ export const useAddToReadList = () => {
     return useMutation({
         mutationFn: async (book: StoredBook) => {
             const readList = await getReadList();
-            if (readList.some((stored) => stored.gutembergId === book.gutembergId)) {
+            if (readList.some((stored) => stored.openLibraryId === book.openLibraryId)) {
                 return readList;
             }
             return writeJson(STORAGE_KEYS.READ_LIST, [
@@ -37,11 +37,11 @@ export const useRemoveFromReadList = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async (gutembergId: number) => {
+        mutationFn: async (openLibraryId: string) => {
             const readList = await getReadList();
             return writeJson(
                 STORAGE_KEYS.READ_LIST,
-                readList.filter((stored) => stored.gutembergId !== gutembergId),
+                readList.filter((stored) => stored.openLibraryId !== openLibraryId),
             );
         },
         onSuccess: (readList) => queryClient.setQueryData(READ_LIST_QUERY_KEY, readList),

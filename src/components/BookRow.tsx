@@ -24,7 +24,7 @@ export default function BookRow({ book, onPress, action }: BookRowProps) {
                     {book.title}
                 </Text>
                 <Text numberOfLines={1} style={styles.author}>
-                    {book.author.join(', ')}
+                    {[book.author.join(', '), book.firstPublishYear].filter(Boolean).join(' · ')}
                 </Text>
             </View>
             {action}

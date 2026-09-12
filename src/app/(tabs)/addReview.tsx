@@ -105,7 +105,7 @@ export default function AddReview() {
                 {isSearching ? (
                     <View style={styles.section}>
                         <SectionLabel>
-                            {isbnMatch ? `ISBN → ${isbnMatch.title}` : 'Résultats'}
+                            {isbnMatch ? `ISBN ${isbnMatch}` : 'Résultats'}
                         </SectionLabel>
                         {search.isLoading ? (
                             <ActivityIndicator color={colors.accent} style={styles.loader} />
@@ -118,9 +118,9 @@ export default function AddReview() {
                         ) : search.data?.books.length === 0 ? (
                             isbnMatch ? (
                                 <EmptyState
-                                    icon="lock-closed-outline"
-                                    title={`« ${isbnMatch.title} » n'est pas dans le domaine public`}
-                                    hint="Gutenberg ne propose que des ouvrages libres de droits."
+                                    icon="barcode-outline"
+                                    title={`Aucun livre pour l'ISBN ${isbnMatch}`}
+                                    hint="Vérifiez le code, ou cherchez plutôt par titre."
                                 />
                             ) : (
                                 <EmptyState
@@ -132,7 +132,7 @@ export default function AddReview() {
                         ) : (
                             search.data?.books.map((book) => (
                                 <BookRow
-                                    key={book.gutembergId}
+                                    key={book.openLibraryId}
                                     book={book}
                                     onPress={() => selectBook(book)}
                                     action={
@@ -153,7 +153,7 @@ export default function AddReview() {
                         <SectionLabel>Dans votre ReadList</SectionLabel>
                         {readList.map((book) => (
                             <BookRow
-                                key={book.gutembergId}
+                                key={book.openLibraryId}
                                 book={book}
                                 onPress={() => selectBook(book)}
                                 action={

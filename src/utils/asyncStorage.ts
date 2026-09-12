@@ -1,8 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+/**
+ * Suffixe de version : le passage de Gutenberg à OpenLibrary a changé la forme
+ * de StoredBook (id numérique → clé d'œuvre). Les anciennes entrées sont
+ * ignorées plutôt que lues avec un identifiant devenu invalide.
+ */
 export const STORAGE_KEYS = {
-    READ_LIST: 'readList',
-    REVIEWS: 'reviews',
+    READ_LIST: 'readList.v2',
+    REVIEWS: 'reviews.v2',
 } as const;
 
 export const readJson = async <T>(key: string, fallback: T): Promise<T> => {

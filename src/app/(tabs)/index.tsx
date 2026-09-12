@@ -16,7 +16,7 @@ export default function Index() {
   const addToReadList = useAddToReadList()
 
   const alreadyAdded = recommendationBook
-    ? readList.some((stored) => stored.gutembergId === recommendationBook.gutembergId)
+    ? readList.some((stored) => stored.openLibraryId === recommendationBook.openLibraryId)
     : false
 
   const handleRefetch = () => {
@@ -47,7 +47,9 @@ export default function Index() {
                   {recommendationBook.title}
                 </Text>
                 <Text numberOfLines={2} style={styles.author}>
-                  {recommendationBook.author.join(', ')}
+                  {[recommendationBook.author.join(', '), recommendationBook.firstPublishYear]
+                    .filter(Boolean)
+                    .join(' · ')}
                 </Text>
               </View>
 

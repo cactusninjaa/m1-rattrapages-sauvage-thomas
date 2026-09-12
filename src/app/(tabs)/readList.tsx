@@ -54,13 +54,13 @@ export default function ReadList() {
             {
                 text: 'Retirer',
                 style: 'destructive',
-                onPress: () => removeFromReadList.mutate(book.gutembergId),
+                onPress: () => removeFromReadList.mutate(book.openLibraryId),
             },
         ]);
     };
 
     const renderSearchResult = ({ item }: { item: StoredBook }) => {
-        const alreadyAdded = readList.some((stored) => stored.gutembergId === item.gutembergId);
+        const alreadyAdded = readList.some((stored) => stored.openLibraryId === item.openLibraryId);
 
         return (
             <BookRow
@@ -135,13 +135,13 @@ export default function ReadList() {
             {isSearching ? (
                 <FlatList
                     data={search.data?.books ?? []}
-                    keyExtractor={(item) => String(item.gutembergId)}
+                    keyExtractor={(item) => item.openLibraryId}
                     renderItem={renderSearchResult}
                     contentContainerStyle={styles.listContent}
                     keyboardShouldPersistTaps="handled"
                     ListHeaderComponent={
                         <SectionLabel style={styles.sectionLabel}>
-                            {isbnMatch ? `ISBN → ${isbnMatch.title}` : 'Résultats'}
+                            {isbnMatch ? `ISBN ${isbnMatch}` : 'Résultats'}
                         </SectionLabel>
                     }
                     ListEmptyComponent={
@@ -155,9 +155,9 @@ export default function ReadList() {
                             />
                         ) : isbnMatch ? (
                             <EmptyState
-                                icon="lock-closed-outline"
-                                title={`« ${isbnMatch.title} » n'est pas dans le domaine public`}
-                                hint="Gutenberg ne propose que des ouvrages libres de droits."
+                                icon="barcode-outline"
+                                title={`Aucun livre pour l'ISBN ${isbnMatch}`}
+                                hint="Vérifiez le code, ou cherchez plutôt par titre."
                             />
                         ) : (
                             <EmptyState
@@ -173,7 +173,7 @@ export default function ReadList() {
                     data={readList.length > 0 ? [...readList, ADD_TILE] : []}
                     key="grid"
                     numColumns={COLUMNS}
-                    keyExtractor={(item) => (item === ADD_TILE ? ADD_TILE : String(item.gutembergId))}
+                    keyExtractor={(item) => (item === ADD_TILE ? ADD_TILE : item.openLibraryId)}
                     renderItem={renderGridItem}
                     columnWrapperStyle={styles.gridRow}
                     contentContainerStyle={styles.listContent}
