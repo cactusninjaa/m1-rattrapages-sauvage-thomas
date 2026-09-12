@@ -100,12 +100,18 @@ export default function ReadList() {
         }
 
         return (
-            <Pressable
-                onLongPress={() => confirmRemove(item)}
-                accessibilityLabel={`${item.title}. Appui long pour retirer.`}
-            >
+            <View>
                 <BookCover book={item} width={coverWidth} />
-            </Pressable>
+                <Pressable
+                    onPress={() => confirmRemove(item)}
+                    hitSlop={8}
+                    style={styles.removeBadge}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Retirer ${item.title} de la ReadList`}
+                >
+                    <Ionicons name="close" size={13} color={colors.text} />
+                </Pressable>
+            </View>
         );
     };
 
@@ -208,6 +214,17 @@ const styles = StyleSheet.create({
     },
     gridRow: {
         gap: GRID_GAP,
+    },
+    removeBadge: {
+        position: 'absolute',
+        top: 5,
+        right: 5,
+        width: 22,
+        height: 22,
+        borderRadius: 11,
+        backgroundColor: 'rgba(10,9,11,.6)',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     addTile: {
         aspectRatio: 2 / 3,
