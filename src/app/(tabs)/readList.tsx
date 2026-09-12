@@ -44,6 +44,7 @@ export default function ReadList() {
     const removeFromReadList = useRemoveFromReadList();
 
     const isSearching = debouncedQuery.trim().length >= MIN_SEARCH_LENGTH;
+    const isbnMatch = search.data?.isbn;
 
     const confirmRemove = (book: StoredBook) => {
         Alert.alert('Retirer de la ReadList ?', book.title, [
@@ -116,18 +117,20 @@ export default function ReadList() {
                 ref={searchInput}
                 value={query}
                 onChangeText={setQuery}
-                placeholder="Titre, auteur…"
+                placeholder="Titre, auteur, ISBN…"
             />
 
             {isSearching ? (
                 <FlatList
-                    data={search.data ?? []}
+                    data={search.data?.books ?? []}
                     keyExtractor={(item) => String(item.gutembergId)}
                     renderItem={renderSearchResult}
                     contentContainerStyle={styles.listContent}
                     keyboardShouldPersistTaps="handled"
                     ListHeaderComponent={
-                        <SectionLabel style={styles.sectionLabel}>Résultats</SectionLabel>
+                        <SectionLabel style={styles.sectionLabel}>
+                            {isbnMatch ? `ISBN → ${isbnMatch.title}` : 'Résultats'}
+                        </SectionLabel>
                     }
                     ListEmptyComponent={
                         search.isLoading ? (
@@ -137,6 +140,12 @@ export default function ReadList() {
                                 icon="cloud-offline-outline"
                                 title="Recherche impossible"
                                 hint={search.error.message}
+                            />
+                        ) : isbnMatch ? (
+                            <EmptyState
+                                icon="lock-closed-outline"
+                                title={`« ${isbnMatch.title} » n'est pas dans le domaine public`}
+                                hint="Gutenberg ne propose que des ouvrages libres de droits."
                             />
                         ) : (
                             <EmptyState

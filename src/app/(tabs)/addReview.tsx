@@ -40,6 +40,7 @@ export default function AddReview() {
     const addReview = useAddReview();
 
     const isSearching = debouncedQuery.trim().length >= MIN_SEARCH_LENGTH;
+    const isbnMatch = search.data?.isbn;
     const canPublish = selectedBook !== null && rating > 0 && !addReview.isPending;
 
     const selectBook = (book: StoredBook) => {
@@ -74,7 +75,7 @@ export default function AddReview() {
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         >
             <ScreenHeader title="Ajouter un avis" />
-            <SearchBar value={query} onChangeText={setQuery} placeholder="Chercher un livre…" />
+            <SearchBar value={query} onChangeText={setQuery} placeholder="Titre, auteur, ISBN…" />
 
             <ScrollView
                 contentContainerStyle={styles.content}
@@ -83,7 +84,9 @@ export default function AddReview() {
             >
                 {isSearching ? (
                     <View style={styles.section}>
-                        <SectionLabel>Résultats</SectionLabel>
+                        <SectionLabel>
+                            {isbnMatch ? `ISBN → ${isbnMatch.title}` : 'Résultats'}
+                        </SectionLabel>
                         {search.isLoading ? (
                             <ActivityIndicator color={colors.accent} style={styles.loader} />
                         ) : search.isError ? (
@@ -92,14 +95,22 @@ export default function AddReview() {
                                 title="Recherche impossible"
                                 hint={search.error.message}
                             />
-                        ) : search.data?.length === 0 ? (
-                            <EmptyState
-                                icon="search-outline"
-                                title={`Aucun livre pour « ${debouncedQuery.trim()} »`}
-                                hint="Essayez un autre titre ou un nom d'auteur."
-                            />
+                        ) : search.data?.books.length === 0 ? (
+                            isbnMatch ? (
+                                <EmptyState
+                                    icon="lock-closed-outline"
+                                    title={`« ${isbnMatch.title} » n'est pas dans le domaine public`}
+                                    hint="Gutenberg ne propose que des ouvrages libres de droits."
+                                />
+                            ) : (
+                                <EmptyState
+                                    icon="search-outline"
+                                    title={`Aucun livre pour « ${debouncedQuery.trim()} »`}
+                                    hint="Essayez un autre titre ou un nom d'auteur."
+                                />
+                            )
                         ) : (
-                            search.data?.map((book) => (
+                            search.data?.books.map((book) => (
                                 <BookRow
                                     key={book.gutembergId}
                                     book={book}
