@@ -6,7 +6,12 @@ import BookCover from '@/components/BookCover';
 import StarRating from '@/components/StarRating';
 import ScreenHeader from '@/components/ScreenHeader';
 import EmptyState from '@/components/EmptyState';
-import { useReviews, useDeleteReview } from '@/hooks/useReviews';
+import EditReviewSheet from '@/components/EditReviewSheet';
+import SwipeableRow, {
+    EDIT_ACTION_COLORS,
+    DELETE_ACTION_COLORS,
+} from '@/components/SwipeableRow';
+import { useReviews, useDeleteReview, useUpdateReview } from '@/hooks/useReviews';
 import { useReadList } from '@/hooks/useReadList';
 import { colors, fonts, spacing } from '@/constants/theme';
 import { Review } from '@/types/library';
@@ -16,10 +21,16 @@ const HISTOGRAM_HEIGHT = 42;
 
 export default function Reviews() {
     const [ratingFilter, setRatingFilter] = useState<number | null>(null);
+    const [editedId, setEditedId] = useState<string | null>(null);
 
     const { data: reviews = [] } = useReviews();
     const { data: readList = [] } = useReadList();
     const deleteReview = useDeleteReview();
+    const updateReview = useUpdateReview();
+
+    // On garde l'id plutôt que l'objet : la feuille reste synchrone avec le
+    // cache si l'avis change pendant l'édition.
+    const editedReview = reviews.find((review) => review.id === editedId) ?? null;
 
     const { average, countByRating } = useMemo(() => {
         const counts = RATINGS.map((rating) => reviews.filter((r) => r.rating === rating).length);
@@ -48,32 +59,61 @@ export default function Reviews() {
     };
 
     const renderReview = ({ item }: { item: Review }) => (
-        <Pressable
-            onLongPress={() => confirmDelete(item)}
-            style={styles.reviewRow}
-            accessibilityLabel={`${item.book.title}, ${item.rating} sur 5. Appui long pour supprimer.`}
+        <SwipeableRow
+            actions={[
+                {
+                    icon: 'pencil',
+                    label: 'Modifier',
+                    ...EDIT_ACTION_COLORS,
+                    onPress: () => setEditedId(item.id),
+                },
+                {
+                    icon: 'trash-outline',
+                    label: 'Supprimer',
+                    ...DELETE_ACTION_COLORS,
+                    onPress: () => confirmDelete(item),
+                },
+            ]}
         >
-            <BookCover book={item.book} width={52} height={78} titleSize={10} />
-            <View style={styles.reviewBody}>
-                <View style={styles.reviewTop}>
-                    <Text numberOfLines={2} style={styles.reviewTitle}>
-                        {item.book.title}
+            <View
+                style={styles.reviewRow}
+                accessibilityLabel={`${item.book.title}, ${item.rating} sur 5. Glissez vers la gauche pour modifier ou supprimer.`}
+            >
+                <BookCover book={item.book} width={52} height={78} titleSize={10} />
+                <View style={styles.reviewBody}>
+                    <View style={styles.reviewTop}>
+                        <Text numberOfLines={2} style={styles.reviewTitle}>
+                            {item.book.title}
+                        </Text>
+                        <Text style={styles.reviewDate}>
+                            {format(new Date(item.createdAt), 'dd MMM', { locale: fr }).toUpperCase()}
+                        </Text>
+                    </View>
+                    <Text numberOfLines={1} style={styles.reviewAuthor}>
+                        {item.book.author.join(', ')}
                     </Text>
-                    <Text style={styles.reviewDate}>
-                        {format(new Date(item.createdAt), 'dd MMM', { locale: fr }).toUpperCase()}
-                    </Text>
+                    <StarRating value={item.rating} size={13} />
+                    {item.comment ? <Text style={styles.reviewComment}>{item.comment}</Text> : null}
                 </View>
-                <Text numberOfLines={1} style={styles.reviewAuthor}>
-                    {item.book.author.join(', ')}
-                </Text>
-                <StarRating value={item.rating} size={13} />
-                {item.comment ? <Text style={styles.reviewComment}>{item.comment}</Text> : null}
             </View>
-        </Pressable>
+        </SwipeableRow>
     );
 
     return (
         <View style={styles.screen}>
+            <EditReviewSheet
+                review={editedReview}
+                onClose={() => setEditedId(null)}
+                isSaving={updateReview.isPending}
+                onSave={(rating, comment) => {
+                    if (!editedReview) return;
+                    updateReview.mutate(
+                        { id: editedReview.id, rating, comment },
+                        { onSuccess: () => setEditedId(null) },
+                    );
+                }}
+            />
+
             <FlatList
                 data={visibleReviews}
                 keyExtractor={(item) => item.id}
@@ -135,7 +175,7 @@ export default function Reviews() {
                                 <Text style={styles.filterCaption}>
                                     {ratingFilter
                                         ? `Filtre actif : ${ratingFilter} ${ratingFilter > 1 ? 'étoiles' : 'étoile'} · ${visibleReviews.length} avis — appuyez de nouveau pour tout voir`
-                                        : 'Appuyez sur une barre pour filtrer par note'}
+                                        : 'Appuyez sur une barre pour filtrer · glissez un avis vers la gauche pour le modifier'}
                                 </Text>
                             </View>
                         ) : null}
@@ -254,10 +294,14 @@ const styles = StyleSheet.create({
     reviewRow: {
         flexDirection: 'row',
         gap: 13,
-        marginHorizontal: spacing.screen,
+        // Padding plutôt que marge : la ligne occupe toute la largeur pour que
+        // les actions glissées atteignent le bord de l'écran.
+        paddingHorizontal: spacing.screen,
         paddingVertical: 15,
         borderTopWidth: 1,
         borderTopColor: 'rgba(243,237,227,.09)',
+        // Opaque, sinon les actions transparaissent sous la ligne pendant le glissement.
+        backgroundColor: colors.background,
     },
     reviewBody: {
         flex: 1,

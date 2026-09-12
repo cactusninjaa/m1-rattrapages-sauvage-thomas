@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
     View,
     Text,
@@ -29,17 +29,6 @@ export default function EditReviewSheet({
     onSave,
     isSaving = false,
 }: EditReviewSheetProps) {
-    const [rating, setRating] = useState(0);
-    const [comment, setComment] = useState('');
-
-    // Réinitialise le formulaire à chaque avis ouvert, pas à chaque rendu.
-    useEffect(() => {
-        if (review) {
-            setRating(review.rating);
-            setComment(review.comment);
-        }
-    }, [review]);
-
     return (
         <Modal visible={review !== null} animationType="slide" transparent onRequestClose={onClose}>
             <Pressable style={styles.backdrop} onPress={onClose} />
@@ -58,48 +47,72 @@ export default function EditReviewSheet({
                         </Pressable>
                     </View>
 
+                    {/* La clé remonte le formulaire à chaque avis ouvert : ses
+                        champs repartent des bonnes valeurs sans passer par un effet. */}
                     {review ? (
-                        <View style={styles.bookCard}>
-                            <BookCover book={review.book} width={52} height={78} titleSize={10} />
-                            <View style={styles.bookInfo}>
-                                <SectionLabel>Livre noté</SectionLabel>
-                                <Text numberOfLines={2} style={styles.bookTitle}>
-                                    {review.book.title}
-                                </Text>
-                                <Text numberOfLines={1} style={styles.bookAuthor}>
-                                    {review.book.author.join(', ')}
-                                </Text>
-                            </View>
-                        </View>
+                        <EditReviewForm
+                            key={review.id}
+                            review={review}
+                            onSave={onSave}
+                            isSaving={isSaving}
+                        />
                     ) : null}
-
-                    <View style={styles.ratingBlock}>
-                        <Text style={styles.fieldLabel}>Votre note</Text>
-                        <StarRating value={rating} size={30} onChange={setRating} />
-                    </View>
-
-                    <TextInput
-                        value={comment}
-                        onChangeText={setComment}
-                        placeholder="Votre avis (facultatif)…"
-                        placeholderTextColor="rgba(243,237,227,.38)"
-                        style={styles.commentInput}
-                        multiline
-                        textAlignVertical="top"
-                    />
-
-                    <Pressable
-                        onPress={() => onSave(rating, comment)}
-                        disabled={rating === 0 || isSaving}
-                        style={[styles.saveButton, (rating === 0 || isSaving) && styles.saveButtonDisabled]}
-                    >
-                        <Text style={styles.saveLabel}>
-                            {isSaving ? 'Enregistrement…' : 'Enregistrer'}
-                        </Text>
-                    </Pressable>
                 </View>
             </KeyboardAvoidingView>
         </Modal>
+    );
+}
+
+type EditReviewFormProps = {
+    review: Review;
+    onSave: (rating: number, comment: string) => void;
+    isSaving: boolean;
+};
+
+function EditReviewForm({ review, onSave, isSaving }: EditReviewFormProps) {
+    const [rating, setRating] = useState(review.rating);
+    const [comment, setComment] = useState(review.comment);
+
+    const disabled = rating === 0 || isSaving;
+
+    return (
+        <>
+            <View style={styles.bookCard}>
+                <BookCover book={review.book} width={52} height={78} titleSize={10} />
+                <View style={styles.bookInfo}>
+                    <SectionLabel>Livre noté</SectionLabel>
+                    <Text numberOfLines={2} style={styles.bookTitle}>
+                        {review.book.title}
+                    </Text>
+                    <Text numberOfLines={1} style={styles.bookAuthor}>
+                        {review.book.author.join(', ')}
+                    </Text>
+                </View>
+            </View>
+
+            <View style={styles.ratingBlock}>
+                <Text style={styles.fieldLabel}>Votre note</Text>
+                <StarRating value={rating} size={30} onChange={setRating} />
+            </View>
+
+            <TextInput
+                value={comment}
+                onChangeText={setComment}
+                placeholder="Votre avis (facultatif)…"
+                placeholderTextColor="rgba(243,237,227,.38)"
+                style={styles.commentInput}
+                multiline
+                textAlignVertical="top"
+            />
+
+            <Pressable
+                onPress={() => onSave(rating, comment)}
+                disabled={disabled}
+                style={[styles.saveButton, disabled && styles.saveButtonDisabled]}
+            >
+                <Text style={styles.saveLabel}>{isSaving ? 'Enregistrement…' : 'Enregistrer'}</Text>
+            </Pressable>
+        </>
     );
 }
 

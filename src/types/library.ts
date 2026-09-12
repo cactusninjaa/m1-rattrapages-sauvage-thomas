@@ -4,7 +4,7 @@ export type StoredBook = {
     openLibraryId: string;
     /** Date ISO : tout passe par du JSON (AsyncStorage, persister react-query). */
     storedDate: string;
-    author: Array<string>;
+    author: string[];
     coverImage: string;
     firstPublishYear?: number;
 };

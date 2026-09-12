@@ -19,20 +19,40 @@ export default function BarcodeScannerSheet({
     onClose,
     onScanned,
 }: BarcodeScannerSheetProps) {
+    return (
+        <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
+            <Pressable style={styles.backdrop} onPress={onClose} />
+
+            <View style={styles.sheet}>
+                <View style={styles.grabber} />
+
+                <View style={styles.header}>
+                    <Text style={styles.title}>Scanner le code-barres</Text>
+                    <Pressable onPress={onClose} hitSlop={8}>
+                        <Text style={styles.close}>Fermer</Text>
+                    </Pressable>
+                </View>
+
+                {/* Monté uniquement à l'ouverture : l'état du scan repart
+                    naturellement à zéro, et la caméra est libérée à la fermeture. */}
+                {visible ? <Scanner onScanned={onScanned} /> : <View style={styles.viewfinder} />}
+            </View>
+        </Modal>
+    );
+}
+
+function Scanner({ onScanned }: { onScanned: (isbn: string) => void }) {
     const [permission, requestPermission] = useCameraPermissions();
     // La caméra émet en rafale : on ne traite qu'un code par ouverture.
     const [handled, setHandled] = useState(false);
     const [rejected, setRejected] = useState<string | null>(null);
 
+    // Demander l'accès est bien une synchronisation avec un système externe.
     useEffect(() => {
-        if (!visible) return;
-        setHandled(false);
-        setRejected(null);
-        // Première ouverture : on demande l'accès sans attendre un tap de plus.
         if (permission && !permission.granted && permission.canAskAgain) {
             requestPermission();
         }
-    }, [visible, permission, requestPermission]);
+    }, [permission, requestPermission]);
 
     const handleBarcodeScanned = ({ data }: { data: string }) => {
         if (handled) return;
@@ -48,54 +68,41 @@ export default function BarcodeScannerSheet({
     };
 
     return (
-        <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
-            <Pressable style={styles.backdrop} onPress={onClose} />
-
-            <View style={styles.sheet}>
-                <View style={styles.grabber} />
-
-                <View style={styles.header}>
-                    <Text style={styles.title}>Scanner le code-barres</Text>
-                    <Pressable onPress={onClose} hitSlop={8}>
-                        <Text style={styles.close}>Fermer</Text>
-                    </Pressable>
-                </View>
-
-                <View style={styles.viewfinder}>
-                    {!permission ? null : !permission.granted ? (
-                        <View style={styles.permission}>
-                            <Ionicons name="camera-outline" size={26} color={colors.textMuted} />
-                            <Text style={styles.permissionText}>
-                                {permission.canAskAgain
-                                    ? "L'accès à la caméra est nécessaire pour scanner un livre."
-                                    : "Autorisez la caméra dans les réglages de votre téléphone."}
-                            </Text>
-                            {permission.canAskAgain ? (
-                                <Pressable onPress={requestPermission} style={styles.permissionButton}>
-                                    <Text style={styles.permissionButtonLabel}>Autoriser la caméra</Text>
-                                </Pressable>
-                            ) : null}
-                        </View>
-                    ) : (
-                        <>
-                            <CameraView
-                                style={StyleSheet.absoluteFill}
-                                facing="back"
-                                barcodeScannerSettings={{ barcodeTypes: [...BARCODE_TYPES] }}
-                                onBarcodeScanned={handled ? undefined : handleBarcodeScanned}
-                            />
-                            <View style={styles.reticle} />
-                        </>
-                    )}
-                </View>
-
-                <Text style={[styles.hint, rejected ? styles.hintRejected : null]}>
-                    {rejected
-                        ? `Code « ${rejected} » non reconnu comme un ISBN.`
-                        : 'Visez le code-barres au dos du livre.'}
-                </Text>
+        <>
+            <View style={styles.viewfinder}>
+                {!permission ? null : !permission.granted ? (
+                    <View style={styles.permission}>
+                        <Ionicons name="camera-outline" size={26} color={colors.textMuted} />
+                        <Text style={styles.permissionText}>
+                            {permission.canAskAgain
+                                ? "L'accès à la caméra est nécessaire pour scanner un livre."
+                                : 'Autorisez la caméra dans les réglages de votre téléphone.'}
+                        </Text>
+                        {permission.canAskAgain ? (
+                            <Pressable onPress={requestPermission} style={styles.permissionButton}>
+                                <Text style={styles.permissionButtonLabel}>Autoriser la caméra</Text>
+                            </Pressable>
+                        ) : null}
+                    </View>
+                ) : (
+                    <>
+                        <CameraView
+                            style={StyleSheet.absoluteFill}
+                            facing="back"
+                            barcodeScannerSettings={{ barcodeTypes: [...BARCODE_TYPES] }}
+                            onBarcodeScanned={handled ? undefined : handleBarcodeScanned}
+                        />
+                        <View style={styles.reticle} />
+                    </>
+                )}
             </View>
-        </Modal>
+
+            <Text style={[styles.hint, rejected ? styles.hintRejected : null]}>
+                {rejected
+                    ? `Code « ${rejected} » non reconnu comme un ISBN.`
+                    : 'Visez le code-barres au dos du livre.'}
+            </Text>
+        </>
     );
 }
 
