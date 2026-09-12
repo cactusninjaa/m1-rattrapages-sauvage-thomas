@@ -41,6 +41,30 @@ export const useAddReview = () => {
     });
 };
 
+export type ReviewEdit = {
+    id: string;
+    rating: number;
+    comment: string;
+};
+
+/** Seuls la note et le commentaire sont modifiables, le livre reste celui noté. */
+export const useUpdateReview = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ id, rating, comment }: ReviewEdit) => {
+            const reviews = await getReviews();
+            return writeJson(
+                STORAGE_KEYS.REVIEWS,
+                reviews.map((review) =>
+                    review.id === id ? { ...review, rating, comment: comment.trim() } : review,
+                ),
+            );
+        },
+        onSuccess: (reviews) => queryClient.setQueryData(REVIEWS_QUERY_KEY, reviews),
+    });
+};
+
 export const useDeleteReview = () => {
     const queryClient = useQueryClient();
 
