@@ -6,17 +6,13 @@ d'architecture mobile.
 L'idée : on te propose un livre du jour, tu te fais une liste de livres à lire,
 et tu notes ceux que tu as finis.
 
+https://github.com/user-attachments/assets/53f2852e-23ed-4b56-bd39-7aac4698cb70
+
 ---
 
 ## Vidéo explicative
 
-> ⚠️ **À REMPLIR AVANT LE RENDU** — lien Loom ou YouTube en non-répertorié.
->
-> Lien : `...`
->
-> La vidéo doit montrer une démo de l'app + l'explication technique du code
-> (le prof demande les deux pour un rattrapage technique).
-
+> [Lien de la vidéo](https://youtu.be/au8GC3ydUuY)
 ---
 
 ## Comment l'installer
@@ -30,11 +26,12 @@ npm install
 npx expo start
 ```
 
-Ensuite tu scannes le QR code avec l'app Expo Go, ou tu appuies sur `i` pour le
-simulateur iOS et `a` pour l'émulateur Android.
+Ensuite il faut scanner le QR code avec l'app Expo Go sur son téléphone, ou appuyer sur `i` pour le
+simulateur iOS et `a` pour l'émulateur Android si ils sont installés sur l'ordinateur.
 
 **Pas besoin de clé d'API**, l'app tape sur OpenLibrary qui est ouvert à tout le
 monde. Il n'y a donc pas de fichier `.env` à créer.
+
 
 ---
 
