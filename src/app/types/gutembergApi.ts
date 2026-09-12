@@ -7,17 +7,19 @@ export interface Book {
     id: number;
     title: string;
     alternative_title: string | null;
-    authors: Author[];
-    subjects: string[];
-    bookshelves: string[];
-    media_type: string;
+    authors: Author[]; // ⚠️ shape exacte à confirmer, voir plus bas
+    subjects: string[]; // ⚠️ à confirmer
+    bookshelves: string[]; // ⚠️ à confirmer
+    formats: Record<string, string>; // probablement { "text/html": "url", "application/epub+zip": "url", ... }
     download_count: number;
-    issued: string; // ISO date
-    reading_ease_score: string; // ⚠️ string dans l'exemple ("81.20"), pas number
+    issued: string;
+    reading_ease_score: string;
+    removed_from_catalog: string | null; // ⚠️ type exact inconnu (date ? booléen déguisé en string ?)
+    summary: string;
     cover_image: string;
 }
 
-interface Paginated<T> {
+export interface Paginated<T> {
     next: string | null;
     previous: string | null;
     results: T[];
