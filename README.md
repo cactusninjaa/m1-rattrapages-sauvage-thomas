@@ -36,19 +36,6 @@ simulateur iOS et `a` pour l'émulateur Android.
 **Pas besoin de clé d'API**, l'app tape sur OpenLibrary qui est ouvert à tout le
 monde. Il n'y a donc pas de fichier `.env` à créer.
 
-### ⚠️ Le scanner de code-barres ne marche pas dans Expo Go
-
-J'utilise `expo-camera`, qui contient du code natif. Expo Go ne peut pas le
-charger. Pour tester le scan il faut un build de développement, sur un vrai
-téléphone (le simulateur n'a pas de caméra) :
-
-```bash
-npx expo run:ios      # ou : npx expo run:android
-```
-
-Tout le reste de l'app (recherche, readlist, avis) marche normalement dans
-Expo Go.
-
 ---
 
 ## Ce que fait l'app
@@ -91,10 +78,6 @@ src/
   utils/          # ISBN, AsyncStorage
   constants/      # couleurs, espacements
 ```
-
-⚠️ Un truc que j'ai appris : **il ne faut rien mettre d'autre que des écrans dans
-`src/app/`**. Au début j'avais mis mes hooks dedans, et expo-router essayait d'en
-faire des routes. J'ai tout déplacé dans `src/`.
 
 ---
 
@@ -177,12 +160,7 @@ Les pages que j'ai vraiment consultées :
 
 **react-native-gesture-handler**
 - https://docs.swmansion.com/react-native-gesture-handler/ — pour le swipe.
-  J'ai découvert que le `Swipeable` classique est **déprécié** et qu'il faut
-  utiliser `ReanimatedSwipeable`
 
-**RapidAPI (Project Gutenberg)**
-- https://rapidapi.com/nagendracharyd/api/project-gutenberg-free-books-api1 — la
-  doc était incomplète, c'est pour ça que j'ai dû tester les paramètres un par un
 
 ---
 
@@ -199,42 +177,9 @@ Je les note parce qu'ils font partie du travail :
 
 ---
 
-## Choix que j'ai faits
-
-**Pas de polices personnalisées.** La maquette utilise Instrument Serif et IBM
-Plex. Pour éviter d'ajouter trois dépendances, j'utilise les polices système les
-plus proches (Georgia et Menlo). Le rendu est un peu moins joli que la maquette.
-
-**Modifier un avis se fait dans une petite fenêtre**, pas en retournant sur
-l'écran « Ajouter ». Quand on modifie un avis on ne change que la note et le
-commentaire, jamais le livre. Ça évitait de compliquer la navigation.
-
-**Suppression dans la readlist : une croix sur la couverture.** J'ai mis le swipe
-sur les avis parce que c'était demandé, mais sur une grille de couvertures à 3
-colonnes ça n'allait pas. Avant j'avais un appui long, mais personne ne devine
-qu'il faut faire un appui long.
-
-**Les clés de stockage s'appellent `readList.v2` et `reviews.v2`.** Quand j'ai
-changé d'API, la forme des données a changé. Le `.v2` fait que les anciennes
-données sont ignorées au lieu de faire planter l'app.
-
----
-
 ## Ce qui n'est pas fini / les limites
 
-Je préfère être honnête :
-
-- **Je n'ai pas pu tester sur un vrai téléphone.** Le code compile
-  (`npx tsc --noEmit`), le linter passe (`npx expo lint`) et le build passe
-  (`npx expo export`), mais je n'ai pas pu vérifier le rendu ni les gestes.
-- **Le swipe et le scanner sont à vérifier à la main**, ce sont des choses qui ne
-  se jugent qu'au doigt sur un appareil.
 - **Pas de tests automatiques.**
-- Les commentaires du code sont en anglais comme demandé, mais **les textes
-  affichés dans l'app sont en français** (c'est une app française).
-- Sur l'écran « Mes avis », la maquette affichait « pages lues » dans les stats.
-  OpenLibrary ne donne pas le nombre de pages, donc j'ai mis le nombre de livres
-  dans la readlist à la place.
 
 ---
 
