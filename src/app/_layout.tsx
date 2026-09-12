@@ -24,7 +24,7 @@ export default function RootLayout() {
       client={queryClient}
       persistOptions={{
         persister: asyncStoragePersister,
-        maxAge: 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24,
         dehydrateOptions: {
           shouldDehydrateQuery: (query) =>
             query.queryKey[0] === "recommendation-book",
