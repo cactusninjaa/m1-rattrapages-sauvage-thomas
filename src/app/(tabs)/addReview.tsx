@@ -19,6 +19,7 @@ import BookCover from '@/components/BookCover';
 import StarRating from '@/components/StarRating';
 import SectionLabel from '@/components/SectionLabel';
 import EmptyState from '@/components/EmptyState';
+import BarcodeScannerSheet from '@/components/BarcodeScannerSheet';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { useSearchBooks, MIN_SEARCH_LENGTH } from '@/hooks/useSearchBooks';
 import { useReadList } from '@/hooks/useReadList';
@@ -33,6 +34,7 @@ export default function AddReview() {
     const [selectedBook, setSelectedBook] = useState<StoredBook | null>(null);
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState('');
+    const [scannerVisible, setScannerVisible] = useState(false);
 
     const debouncedQuery = useDebouncedValue(query);
     const search = useSearchBooks(debouncedQuery);
@@ -46,6 +48,13 @@ export default function AddReview() {
     const selectBook = (book: StoredBook) => {
         setSelectedBook(book);
         setQuery('');
+    };
+
+    /** L'ISBN scanné alimente la barre de recherche, qui bascule seule en mode ISBN. */
+    const handleScanned = (isbn: string) => {
+        setScannerVisible(false);
+        setSelectedBook(null);
+        setQuery(isbn);
     };
 
     const resetForm = () => {
@@ -75,7 +84,18 @@ export default function AddReview() {
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         >
             <ScreenHeader title="Ajouter un avis" />
-            <SearchBar value={query} onChangeText={setQuery} placeholder="Titre, auteur, ISBN…" />
+            <SearchBar
+                value={query}
+                onChangeText={setQuery}
+                placeholder="Titre, auteur, ISBN…"
+                onScanPress={() => setScannerVisible(true)}
+            />
+
+            <BarcodeScannerSheet
+                visible={scannerVisible}
+                onClose={() => setScannerVisible(false)}
+                onScanned={handleScanned}
+            />
 
             <ScrollView
                 contentContainerStyle={styles.content}

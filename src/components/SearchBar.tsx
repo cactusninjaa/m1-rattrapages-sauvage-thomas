@@ -7,10 +7,12 @@ type SearchBarProps = {
     value: string;
     onChangeText: (value: string) => void;
     placeholder?: string;
+    /** Affiche le bouton de scan de code-barres quand il est fourni. */
+    onScanPress?: () => void;
 };
 
 const SearchBar = forwardRef<TextInput, SearchBarProps>(function SearchBar(
-    { value, onChangeText, placeholder = 'Titre, auteur…' },
+    { value, onChangeText, placeholder = 'Titre, auteur…', onScanPress },
     ref,
 ) {
     return (
@@ -32,6 +34,15 @@ const SearchBar = forwardRef<TextInput, SearchBarProps>(function SearchBar(
                     <Ionicons name="close-circle" size={16} color={colors.textFaint} />
                 </Pressable>
             )}
+            {onScanPress && (
+                <Pressable
+                    onPress={onScanPress}
+                    style={styles.scanButton}
+                    accessibilityLabel="Scanner le code-barres d'un livre"
+                >
+                    <Ionicons name="barcode-outline" size={17} color={colors.onAccent} />
+                </Pressable>
+            )}
         </View>
     );
 });
@@ -44,7 +55,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: 9,
         height: 42,
-        paddingHorizontal: 13,
+        paddingLeft: 13,
+        paddingRight: 6,
         borderRadius: 11,
         backgroundColor: colors.surfaceStrong,
         borderWidth: 1,
@@ -56,5 +68,13 @@ const styles = StyleSheet.create({
         fontSize: 13.5,
         color: colors.text,
         padding: 0,
+    },
+    scanButton: {
+        width: 30,
+        height: 30,
+        borderRadius: 8,
+        backgroundColor: colors.accent,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });
