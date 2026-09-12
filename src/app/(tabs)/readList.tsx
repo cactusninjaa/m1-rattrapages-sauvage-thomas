@@ -17,6 +17,7 @@ import BookRow from '@/components/BookRow';
 import BookCover from '@/components/BookCover';
 import EmptyState from '@/components/EmptyState';
 import SectionLabel from '@/components/SectionLabel';
+import BarcodeScannerSheet from '@/components/BarcodeScannerSheet';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { useSearchBooks, MIN_SEARCH_LENGTH } from '@/hooks/useSearchBooks';
 import { useReadList, useAddToReadList, useRemoveFromReadList } from '@/hooks/useReadList';
@@ -32,6 +33,7 @@ type GridItem = StoredBook | typeof ADD_TILE;
 
 export default function ReadList() {
     const [query, setQuery] = useState('');
+    const [scannerVisible, setScannerVisible] = useState(false);
     const debouncedQuery = useDebouncedValue(query);
     const searchInput = useRef<TextInput>(null);
     const { width } = useWindowDimensions();
@@ -118,6 +120,16 @@ export default function ReadList() {
                 value={query}
                 onChangeText={setQuery}
                 placeholder="Titre, auteur, ISBN…"
+                onScanPress={() => setScannerVisible(true)}
+            />
+
+            <BarcodeScannerSheet
+                visible={scannerVisible}
+                onClose={() => setScannerVisible(false)}
+                onScanned={(isbn) => {
+                    setScannerVisible(false);
+                    setQuery(isbn);
+                }}
             />
 
             {isSearching ? (
